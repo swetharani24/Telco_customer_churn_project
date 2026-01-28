@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Churn Prediction App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+        .container {
+            width: 420px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .churn {
+            background-color: #ffe0e0;
+            color: #b30000;
+        }
+        .no-churn {
+            background-color: #e0ffe6;
+            color: #006b2d;
+        }
+        .error {
+            background-color: #fff3cd;
+            color: #856404;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Customer Churn Prediction</h2>
+
+    <form action="/predict" method="POST">
+
+        <!-- Contract -->
+        <label for="Contract">Contract</label>
+        <select name="Contract" required>
+            <option value="Month-to-month">Month-to-month</option>
+            <option value="One year">One year</option>
+            <option value="Two year">Two year</option>
+        </select>
+
+        <!-- Tenure -->
+        <label for="tenure">Tenure (Months)</label>
+        <input type="number" name="tenure" step="1" min="0" required>
+
+        <!-- SIM Operator -->
+        <label for="SIM_Operator">SIM Operator</label>
+        <select name="SIM_Operator" required>
+            <option value="Airtel">Airtel</option>
+            <option value="Jio">Jio</option>
+            <option value="VI">VI</option>
+            <option value="BSNL">BSNL</option>
+        </select>
+
+        <!-- Online Security -->
+        <label for="OnlineSecurity">Online Security</label>
+        <select name="OnlineSecurity" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <button type="submit">Predict Churn</button>
+    </form>
+
+    <!-- Prediction Result -->
+    {% if result %}
+        {% if result.prediction == 1 %}
+            <div class="result churn">
+                ❌ Customer is likely to CHURN <br>
+                Probability: {{ result.probability }}
+            </div>
+        {% else %}
+            <div class="result no-churn">
+                ✅ Customer is likely to STAY <br>
+                Probability: {{ result.probability }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- Error -->
+    {% if error %}
+        <div class="error">
+            ⚠️ Error: {{ error }}
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>
